@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import axios from "axios";
+import { useHistory } from 'react-router-dom';
+
+// make a post request to retrieve a token from the api
+// when you have handled the token, navigate to the BubblePage route
 
 
 class Login extends React.Component {
@@ -23,6 +27,7 @@ class Login extends React.Component {
     Array.from(document.querySelectorAll("input")).forEach(
       input => (input.value = ""))
   }
+
  
   login = e => {
     e.preventDefault()
@@ -30,7 +35,8 @@ class Login extends React.Component {
       .then(res => {
         console.log(res)
         localStorage.setItem('authToken', res.data.payload)
-          this.FormReset()
+        
+          
       })
       .catch(err => console.log(err))
         this.FormReset()
