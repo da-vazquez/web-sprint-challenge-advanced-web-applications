@@ -1,74 +1,74 @@
-import React from "react";
-import axios from "axios";
+import React, { useState } from "react";
+
 import { useHistory } from 'react-router-dom';
+import { axiosWithAuth } from '../helpers/axiosWithAuth';
 
 // make a post request to retrieve a token from the api
 // when you have handled the token, navigate to the BubblePage route
 
 
-class Login extends React.Component {
-  state = {
-    credentials: {
-      username: '',
-      password: ''
-    }
-  }
+const Login = () => {
+  const [initialValues, setInitialValues] = useState({
+    username: '',
+    password: ''
+  })
 
-  handleChange = e => {
-    this.setState({
-      credentials: {
-        ...this.state.credentials,
+  const history = useHistory()
+
+
+  const handleChange = e => {
+    setInitialValues({
+      ...initialValues,
         [e.target.name]: e.target.value
-      }}
-    )
-  }
+    }
+  )}
 
-  FormReset = () => {
+  const formReset = () => {
     Array.from(document.querySelectorAll("input")).forEach(
       input => (input.value = ""))
   }
 
  
-  login = e => {
+  const handleSubmit = e => {
     e.preventDefault()
-      axios.post('http://localhost:5000/api/login', this.state.credentials)
+      axiosWithAuth().post('login', initialValues)
       .then(res => {
-        console.log(res)
+        console.log('user logged in', res)
         localStorage.setItem('authToken', res.data.payload)
-        
-          
+        setInitialValues(res.data)
+        history.push('bubbles')  
       })
       .catch(err => console.log(err))
-        this.FormReset()
+        formReset()
     }
 
-
-  render() {
+  
     return (
     <div className='login-container'>
       <h1>Welcome to the Bubble App!</h1>
-      <form onSubmit={this.login}>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="username"
-          value={this.state.credentials.username}
-          onChange={this.handleChange}
+          value={initialValues.username}
+          onChange={handleChange}
           placeholder='enter username'
           style={{marginRight: '5px'}}
         />
         <input
           type="password"
           name="password"
-          value={this.state.credentials.password}
-          onChange={this.handleChange}
+          value={initialValues.password}
+          onChange={handleChange}
           placeholder='enter password'
           style={{marginRight: '5px'}}
         />
         <button className='login-button'>Sign In</button>
       </form>
     </div>
-  )}
+  )
 }
+
 
 
 export default Login;

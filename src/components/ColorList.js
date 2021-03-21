@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { axiosWithAuth } from '../helpers/axiosWithAuth'
+import { useParams } from 'react-router-dom';
 import EditMenu from './EditMenu'
 
 const initialColor = {
@@ -10,6 +11,8 @@ const initialColor = {
 const ColorList = ({ colors, updateColors }) => {
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const { id } = useParams();
+
 
   const editColor = color => {
     setEditing(true);
@@ -18,10 +21,21 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-
+    axiosWithAuth().put(`/colors/${id}`, colorToEdit)
+    .then(res => {
+      console.log('put request successful', res)
+      setColorToEdit(res.data)
+    })
+    .catch(err => console.log('put request failure', err))
   };
 
   const deleteColor = color => {
+    axiosWithAuth().delete(`/colors/${id}`)
+    .then(res => {
+      console.log('deleted color', res)
+      setColorToEdit(res.data)
+    })
+    .catch(err => console.log('unable to delete color', err))
   };
 
   return (
@@ -47,7 +61,7 @@ const ColorList = ({ colors, updateColors }) => {
           </li>
         ))}
       </ul>
-      { editing && <EditMenu colorToEdit={colorToEdit} saveEdit={saveEdit} setColorToEdit={setColorToEdit} setEditing={setEditing}/> }
+      { editing && <EditMenu colorToEdit={colorToEdit} saveEdit={saveEdit} setColorToEdit={setColorToEdit} setEditing={setEditing} deleteColor={deleteColor}/> }
 
     </div>
   );
