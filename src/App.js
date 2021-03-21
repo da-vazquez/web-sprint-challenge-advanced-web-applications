@@ -11,10 +11,10 @@ function App() {
     <Router>
       <div className="App">
         <nav>
-          <Link to='/color-list'>Color List</Link>
+          <Link to='/bubbles'>Color List</Link>
         </nav>
       <Switch>
-        <PrivateRoute path='/color-list' component={BubblePage}/>
+        <PrivateRoute path='/bubbles' component={BubblePage}/>
         <Route exact path="/" component={Login} />
 
 
