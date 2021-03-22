@@ -10,9 +10,6 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <nav>
-          <Link to='/bubbles'>Color List</Link>
-        </nav>
       <Switch>
         <PrivateRoute path='/bubbles' component={BubblePage}/>
         <Route exact path="/" component={Login} />

@@ -97,7 +97,7 @@ export const handlers = [
   // Handles a POST /login request
   rest.post(`${urlBase}/login`, (req, res, ctx) => {
     const { username, password } = req.body;
-    if (username === "Lambda School" && password === "123456") {
+    if (username === "Lambda School" && password === "i<3Lambd4") {
       return res(
           ctx.status(200),
           ctx.json({

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { axiosWithAuth } from '../helpers/axiosWithAuth'
-import { useParams } from 'react-router-dom';
+
 import EditMenu from './EditMenu'
 
 const initialColor = {
@@ -11,7 +11,6 @@ const initialColor = {
 const ColorList = ({ colors, updateColors }) => {
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
-  const { id } = useParams();
 
 
   const editColor = color => {
@@ -21,19 +20,20 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-    axiosWithAuth().put(`/colors/${id}`, colorToEdit)
+    axiosWithAuth().put(`/colors/${colorToEdit.id}`, colorToEdit)
     .then(res => {
       console.log('put request successful', res)
-      setColorToEdit(res.data)
+      updateColors([...colors, res.data])
+      
     })
     .catch(err => console.log('put request failure', err))
   };
+  
 
   const deleteColor = color => {
-    axiosWithAuth().delete(`/colors/${id}`)
+    axiosWithAuth().delete(`/colors/${color.id}`)
     .then(res => {
-      console.log('deleted color', res)
-      setColorToEdit(res.data)
+      console.log('deleted color', res) 
     })
     .catch(err => console.log('unable to delete color', err))
   };
