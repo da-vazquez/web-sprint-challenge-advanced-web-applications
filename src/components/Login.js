@@ -5,21 +5,21 @@ import { axiosWithAuth } from '../helpers/axiosWithAuth';
 
 // make a post request to retrieve a token from the api
 // when you have handled the token, navigate to the BubblePage route
-
+const initialValues = {
+  username: '',
+  password: '',
+}
 
 const Login = () => {
-  const [initialValues, setInitialValues] = useState({
-    username: '',
-    password: ''
-  })
+  const [auth, setAuth] = useState(initialValues)
 
   const history = useHistory()
 
 
   const handleChange = e => {
-    setInitialValues({
-      ...initialValues,
-        [e.target.name]: e.target.value
+    setAuth({
+      ...auth,
+      [e.target.name]: e.target.value
     }
   )}
 
@@ -31,17 +31,17 @@ const Login = () => {
  
   const handleSubmit = e => {
     e.preventDefault()
-      axiosWithAuth().post('login', initialValues)
+      axiosWithAuth().post('login', auth)
       .then(res => {
         console.log('user logged in', res)
         localStorage.setItem('authToken', res.data.payload)
-        setInitialValues(res.data)
-        history.push('bubbles')  
+        history.push('/bubbles')  
       })
-      .catch(err => console.log(err))
-        formReset()
-    }
-
+      .catch(err => {
+        alert('incorrect combination of username/password')
+        console.log('error loggin in', err)
+      })
+  }
   
     return (
     <div className='login-container'>
@@ -50,7 +50,7 @@ const Login = () => {
         <input
           type="text"
           name="username"
-          value={initialValues.username}
+          value={auth.username}
           onChange={handleChange}
           placeholder='enter username'
           style={{marginRight: '5px'}}
@@ -58,7 +58,7 @@ const Login = () => {
         <input
           type="password"
           name="password"
-          value={initialValues.password}
+          value={auth.password}
           onChange={handleChange}
           placeholder='enter password'
           style={{marginRight: '5px'}}
